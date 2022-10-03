@@ -95,52 +95,67 @@ class DocumentoController extends Controller
 
         $salida = array(
             "datos_propietario" => array(
-                "run" => $this->buscarDatos('R.U.N.', 'Fec. adquisición', 1, $obtenerText),
-                "nombre" => $this->buscarDatos('Nombre', 'R.U.N.', 1, $obtenerText),
-                "fecha_adquision" => $this->buscarDatos('Fec. adquisición', 'Repertorio', 1, $obtenerText),
-                "repertorio" => $this->buscarDatos('Repertorio', 'Número', 1, $obtenerText),
-                "numero" => $this->buscarDatos('Número', 'de fecha', 1, $obtenerText),
-                "de_fecha" => $this->buscarDatos('de fecha', '', 13, $obtenerText),
+                "run" => $this->buscarDatos('R.U.N.', ['Fec. adquisición'], 1, $obtenerText),
+                "nombre" => $this->buscarDatos('Nombre', ['R.U.N.'], 1, $obtenerText),
+                "fecha_adquision" => $this->buscarDatos('Fec. adquisición', ['Repertorio'], 1, $obtenerText),
+                "repertorio" => $this->buscarDatos('Repertorio', ['Número'], 1, $obtenerText),
+                "numero" => $this->buscarDatos('Número', ['de fecha'], 1, $obtenerText),
+                "de_fecha" => substr($this->buscarDatos('de fecha', [''], 2, $obtenerText), 0,10),
             ),
             "datos_vehiculo" => array(
-                "inscripcion" => $this->buscarDatos('Inscripción', 'DATOS DEL VEHICULO', 1, $obtenerText),
-                "tipo_vehiculo" => $this->buscarDatos('Tipo Vehículo', 'Año', 1, $obtenerText),
-                "marca" => $this->buscarDatos('Marca', 'Modelo', 1, $obtenerText),
-                "modelo" => $this->buscarDatos('Modelo', 'Nro. Motor', 1, $obtenerText),
-                "nro_motor" => $this->buscarDatos('Nro. Motor', 'Nro. Chasis', 1, $obtenerText),
-                "nro_chasis" => $this->buscarDatos('Nro. Chasis', 'Nro. Vin', 1, $obtenerText),
-                "nro_vin" => $this->buscarDatos('Nro. Vin', 'Color', 1, $obtenerText),
-                "color" => $this->buscarDatos('Color', 'Combustible', 1, $obtenerText),
-                "combustible" => $this->buscarDatos('Combustible', 'PBV', 1, $obtenerText),
-                "pbv" => $this->buscarDatos('PBV', 'Instit. aseg.', 1, $obtenerText),
-                "insti_asegurardor" => $this->buscarDatos('Instit. aseg.', 'Numero poliza', 1, $obtenerText),
-                "num_poliza" => $this->buscarDatos('Numero poliza', 'Fec. ven. pol.', 1, $obtenerText),
-                "fecha_vencimiento_politica" => $this->buscarDatos('Fec. ven. pol.', 'DATOS DEL PROPIETARIO', 1, $obtenerText),
+                "inscripcion" => $this->buscarDatos('Inscripción', ['DATOS DEL VEHICULO'], 1, $obtenerText),
+                "tipo_vehiculo" => $this->buscarDatos('Tipo Vehículo', ['Año'], 1, $obtenerText),
+                "marca" => $this->buscarDatos('Marca', ['Modelo'], 1, $obtenerText),
+                "modelo" => $this->buscarDatos('Modelo', ['Nro. Motor'], 1, $obtenerText),
+                "nro_motor" => $this->buscarDatos('Nro. Motor', ['Nro. Chasis'], 1, $obtenerText),
+                "nro_chasis" => $this->buscarDatos('Nro. Chasis', ['Nro. Vin', 'Color'], 1, $obtenerText),
+                "nro_vin" => $this->buscarDatos('Nro. Vin', ['Color'], 1, $obtenerText),
+                "color" => $this->buscarDatos('Color', ['Combustible'], 1, $obtenerText),
+                "combustible" => $this->buscarDatos('Combustible', ['PBV'], 1, $obtenerText),
+                "pbv" => $this->buscarDatos('PBV', ['KILOS'], 1, $obtenerText) ." KILOS",
+                "insti_asegurardor" => $this->buscarDatos('Instit. aseg.', ['Numero poliza'], 1, $obtenerText),
+                "num_poliza" => $this->buscarDatos('Numero poliza', ['Fec. ven. pol.'], 1, $obtenerText),
+                "fecha_vencimiento_politica" => $this->buscarDatos('Fec. ven. pol.', ['DATOS DEL PROPIETARIO'], 1, $obtenerText),
             ),
             "limitacion_vehiculo" => array(
-                "limitacion_dominio" => $this->buscarDatos('LIMITACIONES AL DOMINIO', 'SUBINSCRIPCIONES', 1, $obtenerText),
+                "limitacion_dominio" => $this->buscarDatos('LIMITACIONES AL DOMINIO', ['DATOS DE PROPIETARIOS ANTERIORES', 'Sr. usuario'], 1, $obtenerText),
             ),
             "subinscripciones" => array(
-                "subinscripciones" => $this->buscarDatos('SUBINSCRIPCIONES', 'FECHA SUBINSCRIPCION', 19, $obtenerText),
+                "subinscripciones" => $this->buscarDatos('SUBINSCRIPCIONES', ['Sr. usuario'], 1, $obtenerText),
             ),
         );
 
         return response()->json($salida, 200);
     }
-    public function buscarDatos($desde, $hasta, $tipo, $texto)
+    function buscarDatos($desde, $hasta, $tipo, $texto)
     {
+        $valor_hast_for = 0;
+        $texto = stristr($texto, $desde);//texto
+
+            for ($i=0; $i < count($hasta); $i++) {
+                $obtener_posicion_hasta = strpos($texto, $hasta[$i]);
+                if($obtener_posicion_hasta != ''){
+                   $valor_hast_for = $obtener_posicion_hasta;
+                    break;
+                }
+            }
+
         if ($tipo == 1) {
             $cantidad_de_caracteres_desde = strlen($desde);
             $obtener_posicion_desde = strpos($texto, $desde);
-            $obtener_posicion_hasta = strpos($texto, $hasta);
-            $desde_posicion_valor_real = $obtener_posicion_desde + $cantidad_de_caracteres_desde;
-            $hasta_posicion_valor_final = $obtener_posicion_hasta - $obtener_posicion_desde;
-            $hasta_posicion_valor_final = $hasta_posicion_valor_final - $cantidad_de_caracteres_desde;
-            //Salida de resultado limpio
-            return trim(preg_replace('/[\@\;\:]+/', '', substr($texto, $desde_posicion_valor_real, $hasta_posicion_valor_final)));
+
+            if ($obtener_posicion_desde != '') {
+                $desde_posicion_valor_real = $obtener_posicion_desde + $cantidad_de_caracteres_desde;
+                $hasta_posicion_valor_final = $valor_hast_for - $obtener_posicion_desde;
+                $hasta_posicion_valor_final = $hasta_posicion_valor_final - $cantidad_de_caracteres_desde;
+                //Salida de resultado limpio
+                return trim(preg_replace('/[\@\;\:]+/', '', substr($texto, $desde_posicion_valor_real, $hasta_posicion_valor_final)));
+            } else {
+                return '';
+            }
         } else {
 
-            if ($hasta == '') {
+            if ($valor_hast_for == '') {
                 $cantidad_de_caracteres_desde = strlen($desde);
                 $obtener_posicion_desde = strpos($texto, $desde);
                 $desde_posicion_valor_real = $obtener_posicion_desde + $cantidad_de_caracteres_desde;
@@ -148,9 +163,9 @@ class DocumentoController extends Controller
             } else {
                 $cantidad_de_caracteres_desde = strlen($desde);
                 $obtener_posicion_desde = strpos($texto, $desde);
-                $obtener_posicion_hasta = strpos($texto, $hasta);
+                $valor_hast_for = strpos($texto, $valor_hast_for);
                 $desde_posicion_valor_real = $obtener_posicion_desde + $cantidad_de_caracteres_desde;
-                $hasta_posicion_valor_final = $obtener_posicion_hasta - $obtener_posicion_desde;
+                $hasta_posicion_valor_final = $valor_hast_for - $obtener_posicion_desde;
 
                 return trim(preg_replace('/[\@\;\:]+/', '', substr($texto, $desde_posicion_valor_real, ($hasta_posicion_valor_final + $tipo))));
             }
