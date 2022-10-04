@@ -82,7 +82,7 @@
                                             <div class="col-6 col-sm-6 mt-4 mt-sm-0">
                                                 <label for="">Fecha adquisión</label>
                                                 <input id="fecha_adquision" class="multisteps-form__input form-control"
-                                                    type="text" placeholder="Digite la fecha de aquisión" />
+                                                    type="date" placeholder="Digite la fecha de aquisión" />
                                             </div>
                                             <div class="col-6 col-sm-6 mt-4 mt-sm-0">
                                                 <label for="">Repertorio</label>
@@ -97,7 +97,7 @@
                                             <div class="col-6 col-sm-6 mt-4 mt-sm-0">
                                                 <label for="">De fecha</label>
                                                 <input id="de_fecha" class="multisteps-form__input form-control"
-                                                    type="text" placeholder="De fecha" />
+                                                    type="date" placeholder="De fecha" />
                                             </div>
                                             <div class="col-6 col-sm-6 mt-4 mt-sm-0">
                                                 <label for="">COMUNA</label>
@@ -134,12 +134,12 @@
                                         <div class="form-row mt-4">
                                             <div class="col-md-6">
                                                 <label for="">Región</label>
-                                                <input id="region" class="multisteps-form__input form-control"
+                                                <input id="region_firma" class="multisteps-form__input form-control"
                                                     type="text" placeholder="Region" />
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="">Comuna</label>
-                                                <input id="comuna" class="multisteps-form__input form-control"
+                                                <input id="comuna_firma" class="multisteps-form__input form-control"
                                                     type="text" placeholder="Comuna" />
                                             </div>
                                         </div>

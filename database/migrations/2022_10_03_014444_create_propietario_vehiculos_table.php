@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('run', 30);
             $table->string('nombre', 40);
             $table->date('fecha_adquision');
-            $table->string('repertorio', 80);
+            $table->string('repertorio', 80)->nullable();
             $table->date('de_fecha');
             $table->string('comuna', 80);
             $table->string('direccion', 120);

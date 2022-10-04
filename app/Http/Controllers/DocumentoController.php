@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comprador;
 use App\Models\Documento;
+use App\Models\Firma;
+use App\Models\PropietarioVehiculo;
+use App\Models\Vehiculo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -39,7 +43,68 @@ class DocumentoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Guardar propietario vehiculo
+        $propietario_vehiculo = PropietarioVehiculo::create([
+            'run' => $request->run,
+            'nombre' => $request->nombre,
+            'fecha_adquision' => $request->fecha_adquision,
+            //'repertorio' => $request->numero,
+            'de_fecha' => $request->de_fecha,
+            'comuna' => $request->comuna,
+            'direccion' => $request->direccion,
+            'celular' => $request->celular,
+            'email' => $request->email
+        ]);
+
+        /*$lugar_firma = Firma::create([
+            'region' => $request->region_firma,
+            'comuna' => $request->comuna_firma
+        ]);
+
+        $vehiculo = Vehiculo::create([
+            'inscripcion' => $request->inscripcion,
+            'tipo_vehiculo	' => $request->tipo_vehiculo,
+            'marca' => $request->marca,
+            'modelo' => $request->modelo,
+            'num_motor' => $request->num_motor,
+            'chasis' => $request->chasis,
+            'num_vin' => $request->num_vin,
+            'color' => $request->color,
+            'combustible' => $request->combustible,
+            'pbv' => $request->pbv,
+            'instituto' => $request->instituto,
+            'num_poliza' => $request->num_poliza,
+            'fecha_vencimiento_politica' => $request->fecha_vencimiento_politica,
+            'limitaciones_dominio' => $request->limitaciones_dominio,
+            'subincripciones' => $request->subincripciones,
+        ]);
+
+        $comprador = Comprador::class([
+            'run' => $request->run,
+            'nombre' => $request->nombre,
+            'region' => $request->region,
+            'comuna' => $request->comuna,
+            'ciudad' => $request->ciudad,
+            'direccion' => $request->direccion,
+            'email' => $request->email,
+            'celular' => $request->celular,
+        ]);
+
+        $documento = Documento::create([
+            'fecha_creacion' => date('Y-m-d'),
+            'num_interno' => $request->num_interno,
+            'sucuarsal' => 0,
+            'usuario' => 0,
+            'num_inscripcion' => $request->num_inscripcion,
+            'rut_comprador' => $request->rut_comprador,
+            'nombre_vendedor' => 'nombre vendedor',
+            'propietario_vehiculo_id ' => $propietario_vehiculo->id,
+            'vehiculo_id' => $vehiculo->id,
+            'firma_id' => $lugar_firma->id,
+            'comprador_id' => $comprador->id,
+        ]);*/
+
+        return response()->json($propietario_vehiculo, 200);
     }
 
     /**
@@ -118,7 +183,7 @@ class DocumentoController extends Controller
                 "fecha_vencimiento_politica" => $this->buscarDatos('Fec. ven. pol.', ['DATOS DEL PROPIETARIO'], 1, $obtenerText),
             ),
             "limitacion_vehiculo" => array(
-                "limitacion_dominio" => $this->buscarDatos('LIMITACIONES AL DOMINIO', ['DATOS DE PROPIETARIOS ANTERIORES', 'Sr. usuario'], 1, $obtenerText),
+                "limitacion_dominio" => $this->buscarDatos('LIMITACIONES AL DOMINIO', ['Sr. usuario'], 1, $obtenerText),
             ),
             "subinscripciones" => array(
                 "subinscripciones" => $this->buscarDatos('SUBINSCRIPCIONES', ['Sr. usuario'], 1, $obtenerText),
