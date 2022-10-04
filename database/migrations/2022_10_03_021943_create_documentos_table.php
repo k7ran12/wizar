@@ -19,7 +19,7 @@ return new class extends Migration
     {
         Schema::create('documentos', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha_creacion');
+            $table->date('fecha_creacion')->nullable();
             $table->char('num_interno',10)->nullable();
             $table->string('sucuarsal')->nullable()->default(0);
             $table->string('usuario')->nullable()->default(0);
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->foreignIdFor(Vehiculo::class)->constrained();
             $table->foreignIdFor(Firma::class)->constrained();
             $table->foreignIdFor(Comprador::class)->constrained();
-            $table->boolean('estado')->default(1);
+            $table->boolean('estado')->nullable()->default(1);
             $table->timestamps();
         });
     }

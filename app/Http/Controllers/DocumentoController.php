@@ -22,7 +22,9 @@ class DocumentoController extends Controller
      */
     public function index()
     {
-        //
+        //$documento = Documento::with('vehiculo','propietario_vehiculo', 'firma', 'comprador')->get();
+        $documentos = Documento::all();
+        return view('documento.index', compact('documentos'));
     }
 
     /**
@@ -55,19 +57,20 @@ class DocumentoController extends Controller
             'celular' => $request->celular,
             'email' => $request->email
         ]);
+        //Guardar firma
 
-        /*$lugar_firma = Firma::create([
+        $lugar_firma = Firma::create([
             'region' => $request->region_firma,
             'comuna' => $request->comuna_firma
         ]);
 
         $vehiculo = Vehiculo::create([
             'inscripcion' => $request->inscripcion,
-            'tipo_vehiculo	' => $request->tipo_vehiculo,
+            'tipo_vehiculo' => $request->tipo_vehiculo,
             'marca' => $request->marca,
             'modelo' => $request->modelo,
             'num_motor' => $request->num_motor,
-            'chasis' => $request->chasis,
+            'chasis' => $request->num_chasis,
             'num_vin' => $request->num_vin,
             'color' => $request->color,
             'combustible' => $request->combustible,
@@ -75,44 +78,44 @@ class DocumentoController extends Controller
             'instituto' => $request->instituto,
             'num_poliza' => $request->num_poliza,
             'fecha_vencimiento_politica' => $request->fecha_vencimiento_politica,
-            'limitaciones_dominio' => $request->limitaciones_dominio,
-            'subincripciones' => $request->subincripciones,
+            'limitaciones_dominio' => $request->limitacion_dominio,
+            'subincripciones' => $request->subinscripciones,
         ]);
 
-        $comprador = Comprador::class([
-            'run' => $request->run,
-            'nombre' => $request->nombre,
-            'region' => $request->region,
-            'comuna' => $request->comuna,
-            'ciudad' => $request->ciudad,
-            'direccion' => $request->direccion,
-            'email' => $request->email,
-            'celular' => $request->celular,
+           $comprador = Comprador::create([
+            'run' => $request->run_comprador,
+            'nombre' => $request->nombre_comprador,
+            'region' => $request->region_comprador,
+            'comuna' => $request->comuna_comprado,
+            'ciudad' => $request->ciudad_comprador,
+            'direccion' => $request->direccion_comprado,
+            'email' => $request->email_comprado,
+            'celular' => $request->celular_comprador,
         ]);
 
         $documento = Documento::create([
             'fecha_creacion' => date('Y-m-d'),
-            'num_interno' => $request->num_interno,
             'sucuarsal' => 0,
             'usuario' => 0,
-            'num_inscripcion' => $request->num_inscripcion,
-            'rut_comprador' => $request->rut_comprador,
+            'num_inscripcion' => $request->inscripcion,
+            'rut_comprador' => $request->run_comprador,
             'nombre_vendedor' => 'nombre vendedor',
-            'propietario_vehiculo_id ' => $propietario_vehiculo->id,
+            'propietario_vehiculo_id' => $propietario_vehiculo->id,
             'vehiculo_id' => $vehiculo->id,
             'firma_id' => $lugar_firma->id,
             'comprador_id' => $comprador->id,
-        ]);*/
+        ]);
 
-        return response()->json($propietario_vehiculo, 200);
+        $documento->num_interno = $this->generarCodigo($documento->id);
+        $documento->save();
+        return response()->json($documento, 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Documento  $documento
-     * @return \Illuminate\Http\Response
-     */
+    public function generarCodigo($id)
+    {
+        return 'DOC'.str_pad($id, 7, "0", STR_PAD_LEFT);
+    }
+
     public function show(Documento $documento)
     {
         //

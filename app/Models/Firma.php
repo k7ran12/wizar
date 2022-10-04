@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Firma extends Model
 {
     use HasFactory;
+    protected $fillable = ['region', 'comuna'];
 }

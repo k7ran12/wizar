@@ -233,7 +233,7 @@
                                                 <label for="fecha_vencimiento_politica">Fecha vencimiento
                                                     política</label>
                                                 <input id="fecha_vencimiento_politica"
-                                                    class="multisteps-form__input form-control" type="text"
+                                                    class="multisteps-form__input form-control" type="date"
                                                     placeholder="Fecha vencimiento política" />
                                             </div>
                                         </div>

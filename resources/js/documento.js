@@ -107,7 +107,9 @@ documento_pdf.onchange = function () {
             pbv.value = result.datos_vehiculo.pbv
             instituto.value = result.datos_vehiculo.insti_asegurardor
             num_poliza.value = result.datos_vehiculo.num_poliza
-            fecha_vencimiento_politica.value = result.datos_vehiculo.fecha_vencimiento_politica
+            //
+            fecha_vencimiento_politica_formateada = result.datos_vehiculo.fecha_vencimiento_politica.split('-').reverse().join('-')
+            fecha_vencimiento_politica.value = fecha_vencimiento_politica_formateada
             //Limitacion del vehiculo
             limitacion_dominio.innerHTML =  result.limitacion_vehiculo.limitacion_dominio
             //subinscripciones
@@ -193,9 +195,7 @@ function guardarDocumento()
             )
         })
         .catch(function (error) {
-            console.log(error.response.status);
-            console.log(error.response.headers);
-            console.log(error.toJSON());
+            console.log(Object.values(error));
         });
 
 

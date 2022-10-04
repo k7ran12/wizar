@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('compradors', function (Blueprint $table) {
             $table->id();
-            $table->char('run', 15);
-            $table->string('nombre', 80);
-            $table->string('region', 80);
-            $table->string('comuna', 80);
-            $table->string('ciudad', 80);
-            $table->string('direccion',100);
-            $table->string('email', 100);
-            $table->char('celular', 15);
+            $table->char('run', 15)->nullable();
+            $table->string('nombre', 80)->nullable();
+            $table->string('region', 80)->nullable();
+            $table->string('comuna', 80)->nullable();
+            $table->string('ciudad', 80)->nullable();
+            $table->string('direccion',100)->nullable();
+            $table->string('email', 100)->nullable();
+            $table->char('celular', 15)->nullable();
             $table->timestamps();
         });
     }
