@@ -26,10 +26,10 @@ return new class extends Migration
             $table->string('num_inscripcion')->nullable();
             $table->string('rut_comprador')->nullable();
             $table->string('nombre_vendedor')->nullable();
-            $table->foreignIdFor(PropietarioVehiculo::class)->constrained();
-            $table->foreignIdFor(Vehiculo::class)->constrained();
-            $table->foreignIdFor(Firma::class)->constrained();
-            $table->foreignIdFor(Comprador::class)->constrained();
+            $table->foreignIdFor(PropietarioVehiculo::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Vehiculo::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Firma::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Comprador::class)->constrained()->cascadeOnDelete();
             $table->boolean('estado')->nullable()->default(1);
             $table->timestamps();
         });

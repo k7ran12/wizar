@@ -17,5 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('inicio');
 });
+Route::get('/contrato/{contrato}', [DocumentoController::class, 'imprimirContrato'])->name('contrato');
 Route::post('/leerpdf', [DocumentoController::class, 'leerPdf'])->name('leerpdf');
 Route::resource('/documento', DocumentoController::class);

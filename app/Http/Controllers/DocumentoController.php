@@ -8,7 +8,7 @@ use App\Models\Firma;
 use App\Models\PropietarioVehiculo;
 use App\Models\Vehiculo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
+use PDF;
 
 //$parse = new Smalot\PdfParser\Parser;
 
@@ -23,7 +23,7 @@ class DocumentoController extends Controller
     public function index()
     {
         //$documento = Documento::with('vehiculo','propietario_vehiculo', 'firma', 'comprador')->get();
-        $documentos = Documento::all();
+        $documentos = Documento::with('vehiculo')->get();
         return view('documento.index', compact('documentos'));
     }
 
@@ -69,6 +69,7 @@ class DocumentoController extends Controller
             'tipo_vehiculo' => $request->tipo_vehiculo,
             'marca' => $request->marca,
             'modelo' => $request->modelo,
+            'anio' => $request->anio,
             'num_motor' => $request->num_motor,
             'chasis' => $request->num_chasis,
             'num_vin' => $request->num_vin,
@@ -127,9 +128,10 @@ class DocumentoController extends Controller
      * @param  \App\Models\Documento  $documento
      * @return \Illuminate\Http\Response
      */
-    public function edit(Documento $documento)
+    public function edit($id)
     {
-        //
+        $documento = Documento::with('vehiculo','propietario_vehiculo', 'firma', 'comprador')->where('id', $id)->first();
+        return view('documento.edit', compact('documento'));
     }
 
     /**
@@ -139,9 +141,66 @@ class DocumentoController extends Controller
      * @param  \App\Models\Documento  $documento
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Documento $documento)
+    public function update(Request $request, $documento_id)
     {
-        //
+        $propiertario_vehiculo = PropietarioVehiculo::find($request->propietario_vehiculo_id);
+        $propiertario_vehiculo->update([
+            'run'=>$request->run_propietario,
+            'nombre'=>$request->nombre_propietario,
+            'fecha_adquision'=>$request->fecha_adquision_propietario,
+            'repertorio'=>$request->repertorio_propietario,
+            'de_fecha'=>$request->de_fecha_propietario,
+            'comuna'=>$request->comuna_propietario,
+            'direccion'=>$request->direccion_propietario,
+            'celular'=>$request->celular_propietario,
+            'email'=>$request->email_propietario,
+        ]);
+        $vehiculo = Vehiculo::find($request->vehiculo_id);
+        $vehiculo->update([
+            'inscripcion'=>$request->inscripcion,
+            'anio'=>$request->anio,
+            'tipo_vehiculo'=>$request->tipo_vehiculo,
+            'marca'=>$request->marca,
+            'modelo'=>$request->modelo,
+            'num_motor'=>$request->num_motor,
+            'chasis'=>$request->chasis,
+            'num_vin'=>$request->num_vin,
+            'color'=>$request->color,
+            'combustible'=>$request->combustible,
+            'pbv'=>$request->pbv,
+            'instituto'=>$request->instituto,
+            'num_poliza'=>$request->num_poliza,
+            'fecha_vencimiento_politica'=>$request->fecha_vencimiento_politica,
+            'limitaciones_dominio'=>$request->limitaciones_dominio,
+            'subincripciones'=>$request->subincripciones,
+        ]);
+        $firma = Firma::find($request->firma_id);
+        $firma->update([
+            'region'=>$request->region_firma,
+            'comuna'=>$request->comuna_firma,
+        ]);
+        $comprador = Comprador::find($request->comprador_id);
+        $comprador->update([
+            'run'=>$request->run_comprador,
+            'nombre'=>$request->nombre_comprador,
+            'region'=>$request->region_comprador,
+            'comuna'=>$request->comuna_comprador,
+            'ciudad'=>$request->ciudad_comprador,
+            'direccion'=>$request->direccion_comprador,
+            'email'=>$request->email_comprador,
+            'celular'=>$request->celular_comprador,
+        ]);
+        $documento = Documento::find($documento_id);
+        $documento->update([
+            'fecha_creacion'=>$request->fecha_creacion,
+            'num_interno'=>$request->num_interno,
+            'num_inscripcion'=>$request->num_inscripcion,
+            'rut_comprador'=>$request->rut_comprador,
+            'estado'=>$request->estado,
+        ]);
+
+        return redirect()->route('documento.edit', $documento_id)
+            ->with('success', 'Se actualizo correctamente');
     }
 
     /**
@@ -150,9 +209,13 @@ class DocumentoController extends Controller
      * @param  \App\Models\Documento  $documento
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Documento $documento)
+    public function destroy($id)
     {
-        //
+        $documento = Documento::find($id);
+        $codigo_interno = $documento->num_interno;
+        $documento->delete();
+        return redirect()->route('documento.index')
+            ->with('success', 'Se elimino correctamente el documento : '.$codigo_interno);
     }
     public function leerPdf(Request $request)
     {
@@ -173,6 +236,7 @@ class DocumentoController extends Controller
             "datos_vehiculo" => array(
                 "inscripcion" => $this->buscarDatos('Inscripción', ['DATOS DEL VEHICULO'], 1, $obtenerText),
                 "tipo_vehiculo" => $this->buscarDatos('Tipo Vehículo', ['Año'], 1, $obtenerText),
+                "anio" => $this->buscarDatos('Año', ['Marca'], 1, $obtenerText),
                 "marca" => $this->buscarDatos('Marca', ['Modelo'], 1, $obtenerText),
                 "modelo" => $this->buscarDatos('Modelo', ['Nro. Motor'], 1, $obtenerText),
                 "nro_motor" => $this->buscarDatos('Nro. Motor', ['Nro. Chasis'], 1, $obtenerText),
@@ -238,5 +302,12 @@ class DocumentoController extends Controller
                 return trim(preg_replace('/[\@\;\:]+/', '', substr($texto, $desde_posicion_valor_real, ($hasta_posicion_valor_final + $tipo))));
             }
         }
+    }
+    public function imprimirContrato($id)
+    {
+        $documento = Documento::with('vehiculo','propietario_vehiculo', 'firma', 'comprador')->where('id', $id)->first();
+		$pdf = PDF::loadView('documento.imprimir_pdf', compact('documento'));
+        $pdf->setPaper('A4', 'portrait');
+		return $pdf->stream('documento.pdf');
     }
 }

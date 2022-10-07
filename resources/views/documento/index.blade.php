@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.37/sweetalert2.css">
 </head>
 
 <body>
@@ -29,6 +30,11 @@
             </div>
         </div>
     </nav>
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
     <div class="container">
         <div class="card mt-3">
             <center>
@@ -43,6 +49,8 @@
                             <th scope="col">N° Interno</th>
                             <th scope="col">N° Inscripcion</th>
                             <th scope="col">Rut Comprador</th>
+                            <th scope="col">Limitaciones</th>
+                            <th scope="col">Subincripciones</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -55,9 +63,26 @@
                             <td>{{ $documento->num_inscripcion}}</td>
                             <td>{{ $documento->rut_comprador}}</td>
                             <td>
-                                <a href="#" class="btn btn-success"><i class="fa-solid fa-eye"></i></a>
-                                <form action="">
-                                    <button class="btn btn-danger" type="submit"><i class="fa-solid fa-trash"></i></button>
+                                @if($documento->vehiculo->limitaciones_dominio != null)
+                                <i style="color: green" class="fa-solid fa-check"></i>
+                                @else
+                                <i style="color: red" class="fa-solid fa-xmark"></i>
+                                @endif
+                            </td>
+                            <td>
+                                @if($documento->vehiculo->subincripciones)
+                                <i style="color: green" class="fa-solid fa-check"></i>
+                                @else
+                                <i style="color: red" class="fa-solid fa-xmark"></i>
+                                @endif
+                            </td>
+                            <td>
+                                <a href="{{ route('documento.edit', $documento->id) }}" class="btn btn-success"><i class="fa-solid fa-eye"></i></a>
+                                <form id="eliminar_documento" action="{{ route('documento.destroy', $documento->id) }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button onclick="eliminarDocumento(this)" class="btn btn-danger" type="submit"><i
+                                            class="fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -67,7 +92,7 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.37/sweetalert2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
@@ -97,6 +122,7 @@
             });
         });
     </script>
+    <script src="{{ Vite::asset('resources/js/documento.js') }}"></script>
 </body>
 
 </html>

@@ -35,6 +35,10 @@
                 <h2 class="content__title">Formulario</h2>
             </div>
             <div class="container overflow-hidden">
+                <!--<form action="{{ route('documento.store') }}" method="post">
+                    @csrf
+                    <button type="submit">enviar</button>
+                </form>-->
                 <!--multisteps-form-->
                 <div class="multisteps-form">
                     <!--progress bar-->
@@ -117,7 +121,7 @@
                                             <div class="col-6 col-sm-6 mt-4 mt-sm-0">
                                                 <label for="">EMAIL</label>
                                                 <input id="email" class="multisteps-form__input form-control"
-                                                    type="text" placeholder="Digite el correo" />
+                                                    type="email" placeholder="Digite el correo" />
                                             </div>
                                         </div>
                                         <div class="button-row d-flex mt-4">
@@ -167,6 +171,11 @@
                                                 <label for="tipo_vehiculo">Tipo de vehiculo</label>
                                                 <input id="tipo_vehiculo" class="multisteps-form__input form-control"
                                                     type="text" placeholder="Tipo de vehiculo" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="anio_vehiculo">Año</label>
+                                                <input id="anio_vehiculo" class="multisteps-form__input form-control"
+                                                    type="text" placeholder="Año" />
                                             </div>
 
                                             <div class="col-md-6">
@@ -252,7 +261,8 @@
                                         <div class="form-row mt-4">
                                             <div class="col-md-12">
                                                 <label for="limitacion_dominio">Limitaciones al dominio</label>
-                                                <textarea class="form-control" id="limitacion_dominio" rows="3"></textarea>
+                                                <textarea class="form-control" id="limitacion_dominio"
+                                                    rows="3"></textarea>
                                             </div>
                                         </div>
                                         <div class="button-row d-flex mt-4">
@@ -270,7 +280,8 @@
                                         <div class="form-row mt-4">
                                             <div class="col-md-12">
                                                 <label for="subinscripciones">Subincripciones</label>
-                                                <textarea class="form-control" id="subinscripciones" rows="3"></textarea>
+                                                <textarea class="form-control" id="subinscripciones"
+                                                    rows="3"></textarea>
                                             </div>
                                         </div>
                                         <div class="button-row d-flex mt-4">
@@ -314,8 +325,9 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="">Direccion</label>
-                                                <input id="direccion_comprado" class="multisteps-form__input form-control"
-                                                    type="text" placeholder="Direccion" />
+                                                <input id="direccion_comprado"
+                                                    class="multisteps-form__input form-control" type="text"
+                                                    placeholder="Direccion" />
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="">Email</label>
@@ -324,15 +336,16 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="">Celular</label>
-                                                <input id="celular_comprador" class="multisteps-form__input form-control"
-                                                    type="text" placeholder="Celular" />
+                                                <input id="celular_comprador"
+                                                    class="multisteps-form__input form-control" type="text"
+                                                    placeholder="Celular" />
                                             </div>
                                         </div>
                                         <div class="button-row d-flex mt-4">
                                             <button class="btn btn-primary js-btn-prev" type="button"
                                                 title="Prev">Prev</button>
-                                            <button onclick="guardarDocumento()" class="btn btn-success ml-auto" type="button"
-                                                title="Send">Send</button>
+                                            <button onclick="guardarDocumento()" class="btn btn-success ml-auto"
+                                                type="button" title="Send">Send</button>
                                         </div>
                                     </div>
                                 </div>
@@ -347,6 +360,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.37/sweetalert2.min.js"></script>
     <script src="{{ Vite::asset('resources/js/wizar.js') }}"></script>
     <script src="{{ Vite::asset('resources/js/documento.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/inputmask/inputmask.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/css/inputmask.min.css" rel="stylesheet" />
+    <script>
+        $(document).ready(function () {
+            $("#run").inputmask({
+                mask: "9[9.999.99]-[9|K|k]",
+            });
+        });
+
+    </script>
 </body>
 
 </html>

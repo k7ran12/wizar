@@ -19,6 +19,7 @@ let comuna_firma = document.getElementById('comuna_firma');
 let inscripcion = document.getElementById('inscripcion');
 let tipo_vehiculo = document.getElementById('tipo_vehiculo');
 let marca = document.getElementById('marca');
+let anio_vehiculo = document.getElementById('anio_vehiculo');
 let modelo = document.getElementById('modelo');
 let num_motor = document.getElementById('num_motor');
 let num_chasis = document.getElementById('num_chasis');
@@ -61,7 +62,7 @@ documento_pdf.onchange = function () {
     })
         .then(response => {
             if (!response.ok) {
-                console.log('Holaaaa'+response);
+                console.log('Holaaaa' + response);
                 throw new Error(
                     Swal.fire({
                         icon: 'error',
@@ -107,11 +108,12 @@ documento_pdf.onchange = function () {
             pbv.value = result.datos_vehiculo.pbv
             instituto.value = result.datos_vehiculo.insti_asegurardor
             num_poliza.value = result.datos_vehiculo.num_poliza
+            anio_vehiculo.value = result.datos_vehiculo.anio
             //
             fecha_vencimiento_politica_formateada = result.datos_vehiculo.fecha_vencimiento_politica.split('-').reverse().join('-')
             fecha_vencimiento_politica.value = fecha_vencimiento_politica_formateada
             //Limitacion del vehiculo
-            limitacion_dominio.innerHTML =  result.limitacion_vehiculo.limitacion_dominio
+            limitacion_dominio.innerHTML = result.limitacion_vehiculo.limitacion_dominio
             //subinscripciones
             subinscripciones.innerHTML = result.subinscripciones.subinscripciones
         })
@@ -121,8 +123,7 @@ documento_pdf.onchange = function () {
 
 };
 
-function guardarDocumento()
-{
+function guardarDocumento() {
     const formData = new FormData();
     formData.append('run', run.value);
     formData.append('nombre', nombre.value);
@@ -141,6 +142,7 @@ function guardarDocumento()
     formData.append('inscripcion', inscripcion.value);
     formData.append('tipo_vehiculo', tipo_vehiculo.value);
     formData.append('marca', marca.value);
+    formData.append('anio', anio_vehiculo.value);
     formData.append('modelo', modelo.value);
     formData.append('num_motor', num_motor.value);
     formData.append('num_chasis', num_chasis.value);
@@ -188,11 +190,13 @@ function guardarDocumento()
         })
         .then(function (result) {
             console.log(result)
-            Swal.fire(
-                'Los datos se guardaron correctamente!',
-                `Podra ver los datos en su dashboard`,
-                'success'
-            )
+            let url = location.href
+            Swal.fire({
+                icon: 'success',
+                title: 'Los datos se guardaron satisfactoriamente',
+                text: 'Click para imprimir el contrado!',
+                footer: `<a target="_blank" href="${url}contrato/${result.id}">Imprimir</a>`
+            })
         })
         .catch(function (error) {
             console.log(Object.values(error));
@@ -202,5 +206,26 @@ function guardarDocumento()
     //validar formulario
     console.log(formData)
 }
+
+function eliminarDocumento(elemento) {
+    event.preventDefault();
+    let form = elemento.parentNode
+    console.log(form)
+    Swal.fire({
+        title: '¿Estas seguro?',
+        text: "No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, bórralo!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit();
+        }
+      })
+}
+
+
 
 
