@@ -15,8 +15,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('inicio');
+    return view('auth.login');
 });
 Route::get('/contrato/{contrato}', [DocumentoController::class, 'imprimirContrato'])->name('contrato');
-Route::post('/leerpdf', [DocumentoController::class, 'leerPdf'])->name('leerpdf');
-Route::resource('/documento', DocumentoController::class);
+Route::get('/contrato/actaformatocompleto/{contrato}', [DocumentoController::class, 'actaFormatoCompleto'])->name('actaformatocompleto');
+Route::get('/contrato/actaconrepresentacion/{contrato}', [DocumentoController::class, 'actaConRepresentacion'])->name('actaconrepresentacion');
+Route::get('/contrato/contratocomprapara/{contrato}', [DocumentoController::class, 'contratoCompraPara'])->name('contratocomprapara');
+Route::get('/contrato/contratodecompraventa/{contrato}', [DocumentoController::class, 'contratoDeCompraVenta'])->name('contratodecompraventa');
+Route::get('/contrato/contratopresentacionvendedorcomprador/{contrato}', [DocumentoController::class, 'contratoPresentacionVendedorComprador'])->name('contratopresentacionvendedorcomprador');
+Route::get('/contrato/contratorepresentacionvendedor/{contrato}', [DocumentoController::class, 'contratoRepresentacionVendedor'])->name('contratorepresentacionvendedor');
+Route::post('/leerpdf', [DocumentoController::class, 'leerPdf'])->name('leerpdf')->middleware('auth');
+Route::resource('/documento', DocumentoController::class)->middleware('auth');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');

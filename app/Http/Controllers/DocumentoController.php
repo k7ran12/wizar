@@ -310,4 +310,46 @@ class DocumentoController extends Controller
         $pdf->setPaper('A4', 'portrait');
 		return $pdf->stream('documento.pdf');
     }
+    public function actaFormatoCompleto($id)
+    {
+        $documento = Documento::with('vehiculo','propietario_vehiculo', 'firma', 'comprador')->where('id', $id)->first();
+		$pdf = PDF::loadView('documento.actaFormatoCompleto', compact('documento'));
+        $pdf->setPaper('A4', 'portrait');
+		return $pdf->stream('documento.pdf');
+    }
+    public function actaConRepresentacion($id)
+    {
+        $documento = Documento::with('vehiculo','propietario_vehiculo', 'firma', 'comprador')->where('id', $id)->first();
+		$pdf = PDF::loadView('documento.actaConRepresentacion', compact('documento'));
+        $pdf->setPaper('A4', 'portrait');
+		return $pdf->stream('documento.pdf');
+    }
+    public function contratoCompraPara($id)
+    {
+        $documento = Documento::with('vehiculo','propietario_vehiculo', 'firma', 'comprador')->where('id', $id)->first();
+		$pdf = PDF::loadView('documento.contratoCompraPara', compact('documento'));
+        $pdf->setPaper('A4', 'portrait');
+		return $pdf->stream('documento.pdf');
+    }
+    public function contratoDeCompraVenta($id)
+    {
+        $documento = Documento::with('vehiculo','propietario_vehiculo', 'firma', 'comprador')->where('id', $id)->first();
+		$pdf = PDF::loadView('documento.contratoDeCompraVenta', compact('documento'));
+        $pdf->setPaper('A4', 'portrait');
+		return $pdf->stream('documento.pdf');
+    }
+    public function contratoPresentacionVendedorComprador($id)
+    {
+        $documento = Documento::with('vehiculo','propietario_vehiculo', 'firma', 'comprador')->where('id', $id)->first();
+		$pdf = PDF::loadView('documento.contratoPresentacionVendedorComprador', compact('documento'));
+        $pdf->setPaper('A4', 'portrait');
+		return $pdf->stream('documento.pdf');
+    }
+    public function contratoRepresentacionVendedor($id)
+    {
+        $documento = Documento::with('vehiculo','propietario_vehiculo', 'firma', 'comprador')->where('id', $id)->first();
+		$pdf = PDF::loadView('documento.contratoRepresentacionVendedor', compact('documento'));
+        $pdf->setPaper('A4', 'portrait');
+		return $pdf->stream('documento.pdf');
+    }
 }

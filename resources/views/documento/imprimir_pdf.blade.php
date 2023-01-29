@@ -58,7 +58,7 @@
             y descargar este documento en
         </p>
         <p style="margin: 0 !important;"><a
-                href="https://doc.autofactpro.com/SDOC4KZwxQsZQ">https://doc.autofactpro.com/SDOC4KZwxQsZQ</a> o
+                href="{{ Request::fullUrl(); }}">{{ Request::fullUrl(); }}</a> o
             directamente a través del código QR
         </p>
     </div>

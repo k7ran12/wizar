@@ -189,13 +189,13 @@ function guardarDocumento() {
             }
         })
         .then(function (result) {
-            console.log(result)
-            let url = location.href
+            let url = window.location.origin
+            console.log(url)
             Swal.fire({
                 icon: 'success',
                 title: 'Los datos se guardaron satisfactoriamente',
                 text: 'Click para imprimir el contrado!',
-                footer: `<a target="_blank" href="${url}contrato/${result.id}">Imprimir</a>`
+                footer: `<a target="_blank" href="${url}/contrato/${result.id}">Imprimir</a>`
             })
         })
         .catch(function (error) {
